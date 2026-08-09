@@ -17,6 +17,9 @@ playwright-report/
 test-results/
 blob-report/
 
+# Local research and planning notes
+docs/
+
 # Local tooling and editor state
 .DS_Store
 Thumbs.db
