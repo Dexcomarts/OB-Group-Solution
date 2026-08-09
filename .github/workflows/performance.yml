@@ -1,0 +1,74 @@
+name: Performance
+
+on:
+  pull_request:
+    branches:
+      - main
+  deployment_status:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: "Preview or production URL to audit"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: performance-${{ github.event.deployment_status.target_url || inputs.base_url || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lighthouse:
+    name: Lighthouse budgets
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    if: github.event_name != 'deployment_status' || github.event.deployment_status.state == 'success'
+
+    env:
+      LHCI_URL: ${{ github.event.deployment_status.target_url || inputs.base_url || 'http://localhost:4321' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Detect Node project
+        id: project
+        shell: bash
+        run: |
+          if [ -f package.json ]; then
+            echo "has_package=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_package=false" >> "$GITHUB_OUTPUT"
+            echo "No package.json found yet; skipping Lighthouse gates."
+          fi
+
+      - name: Set up Node
+        if: steps.project.outputs.has_package == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.project.outputs.has_package == 'true'
+        run: npm ci
+
+      - name: Build site for local audit
+        if: steps.project.outputs.has_package == 'true' && env.LHCI_URL == 'http://localhost:4321'
+        run: npm run build
+
+      - name: Run Lighthouse CI
+        if: steps.project.outputs.has_package == 'true'
+        shell: bash
+        run: npx --yes @lhci/cli autorun --config=./lighthouserc.cjs
+
+      - name: Upload Lighthouse reports
+        if: always() && steps.project.outputs.has_package == 'true' && hashFiles('.lighthouseci/**') != ''
+        uses: actions/upload-artifact@v5
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci
+          if-no-files-found: ignore
+          retention-days: 7
