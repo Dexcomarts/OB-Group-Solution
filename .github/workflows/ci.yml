@@ -76,7 +76,7 @@ jobs:
 
       - name: Upload build artifact
         if: steps.project.outputs.has_package == 'true' && hashFiles('dist/**') != ''
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: ob-group-dist
           path: dist
