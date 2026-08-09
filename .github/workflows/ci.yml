@@ -1,0 +1,84 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+      - ci-cd-workflows
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Detect Node project
+        id: project
+        shell: bash
+        run: |
+          if [ -f package.json ]; then
+            echo "has_package=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_package=false" >> "$GITHUB_OUTPUT"
+            echo "No package.json found yet; skipping Node build gates."
+          fi
+
+      - name: Set up Node
+        if: steps.project.outputs.has_package == 'true'
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        if: steps.project.outputs.has_package == 'true'
+        run: npm ci
+
+      - name: Format check
+        if: steps.project.outputs.has_package == 'true'
+        shell: bash
+        run: npm run format:check --if-present
+
+      - name: Lint
+        if: steps.project.outputs.has_package == 'true'
+        shell: bash
+        run: npm run lint --if-present
+
+      - name: Type and Astro check
+        if: steps.project.outputs.has_package == 'true'
+        shell: bash
+        run: npm run check --if-present
+
+      - name: Unit tests
+        if: steps.project.outputs.has_package == 'true'
+        shell: bash
+        run: npm test --if-present
+
+      - name: Production build
+        if: steps.project.outputs.has_package == 'true'
+        shell: bash
+        run: npm run build
+
+      - name: Upload build artifact
+        if: steps.project.outputs.has_package == 'true' && hashFiles('dist/**') != ''
+        uses: actions/upload-artifact@v5
+        with:
+          name: ob-group-dist
+          path: dist
+          if-no-files-found: error
+          retention-days: 7
