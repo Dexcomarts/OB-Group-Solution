@@ -1,0 +1,63 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: "en-US"
+early_access: false
+
+reviews:
+  profile: "assertive"
+  request_changes_workflow: true
+  high_level_summary: true
+  review_status: true
+  review_details: true
+  poem: false
+  auto_review:
+    enabled: true
+    drafts: false
+  path_filters:
+    - "!dist/**"
+    - "!node_modules/**"
+    - "!.astro/**"
+    - "!coverage/**"
+    - "!test-results/**"
+    - "!playwright-report/**"
+    - "!asset-pipeline/3d/source/**"
+    - "!asset-pipeline/3d/tmp/**"
+  path_instructions:
+    - path: "src/**"
+      instructions: |
+        Review this as the OB Group website codebase: an Astro static-first frontend with React islands, Tailwind, Three.js/React Three Fiber, and GSAP.
+        Focus on accessibility, responsive layout correctness, bundle size, type safety, component boundaries, and avoiding unnecessary client-side JavaScript.
+    - path: "src/modules/three-d/**"
+      instructions: |
+        Treat 3D code as performance-sensitive product presentation code.
+        Check for lazy loading, nonblank fallback states, cleanup of animation/render loops, reduced-motion support, mobile performance, and isolated Three.js bundles.
+    - path: ".github/workflows/**"
+      instructions: |
+        Review GitHub Actions for least-privilege permissions, secret safety, pinned or trusted actions, safe pull request handling, and production deployment gating.
+        Flag use of pull_request_target, broad token permissions, printed secrets, untrusted shell input, or production deploys outside protected main.
+    - path: "docs/**"
+      instructions: |
+        Check whether documentation remains accurate for the OB Group project direction, architecture decisions, CI/CD policy, and 3D/product-led website scope.
+
+knowledge_base:
+  web_search:
+    enabled: true
+  code_guidelines:
+    enabled: true
+    filePatterns:
+      - "docs/architecture/**/*.md"
+      - "docs/research/**/*.md"
+      - "docs/superpowers/plans/**/*.md"
+      - "PROJECT_CONTEXT.md"
+  learnings:
+    scope: "local"
+  issues:
+    scope: "local"
+  pull_requests:
+    scope: "local"
+  automatic_repository_linking: false
+  linked_repositories: []
+
+chat:
+  art: false
+  auto_reply: true
+  allow_non_org_members: false
