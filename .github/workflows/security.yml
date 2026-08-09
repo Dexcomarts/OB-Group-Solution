@@ -39,7 +39,7 @@ jobs:
           docker run --rm \
             -v "$PWD:/repo" \
             ghcr.io/gitleaks/gitleaks:v8.30.1 \
-            git --source /repo --redact --verbose
+            git /repo --redact --verbose
 
   dependency-review:
     name: Dependency review
