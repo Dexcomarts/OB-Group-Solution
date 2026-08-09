@@ -1,0 +1,38 @@
+# Dependencies and package-manager state
+node_modules/
+.npm/
+
+# Astro and build output
+.astro/
+dist/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Test and coverage output
+coverage/
+playwright-report/
+test-results/
+blob-report/
+
+# Local tooling and editor state
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.log
+
+# Deployment providers
+.vercel/
+.netlify/
+
+# Raw 3D authoring files are managed through an approved DAM or Git LFS.
+asset-pipeline/3d/source/**
+
+# Temporary 3D optimization output
+asset-pipeline/3d/tmp/
+*.gltf.tmp
+*.glb.tmp
