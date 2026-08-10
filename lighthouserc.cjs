@@ -6,7 +6,9 @@ module.exports = {
       url: [targetUrl],
       numberOfRuns: 3,
       startServerCommand:
-        targetUrl === "http://localhost:4321" ? "npm run preview -- --host 127.0.0.1" : undefined,
+        targetUrl === "http://localhost:4321"
+          ? "npm run preview -- --host 127.0.0.1"
+          : undefined,
       startServerReadyPattern: "Local:",
       startServerReadyTimeout: 30000,
       settings: {

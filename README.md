@@ -48,4 +48,3 @@ Development commands will be documented after the Astro scaffold and lockfile ar
 ## License
 
 Copyright OB Group. No open-source license has been granted at this stage.
-
