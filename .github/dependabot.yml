@@ -27,10 +27,14 @@ updates:
       day: "monday"
       time: "09:30"
       timezone: "Etc/UTC"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 1
     commit-message:
       prefix: "ci"
       include: "scope"
     labels:
       - "github-actions"
       - "security"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
