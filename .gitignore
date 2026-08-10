@@ -4,6 +4,7 @@ node_modules/
 
 # Astro and build output
 .astro/
+.next/
 dist/
 
 # Environment files
@@ -19,6 +20,8 @@ blob-report/
 
 # Local research and planning notes
 docs/
+AGENTS.md
+CLAUDE.md
 
 # Local tooling and editor state
 .DS_Store
@@ -27,6 +30,8 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 *.log
+next-dev.*.log
+tsconfig.tsbuildinfo
 
 # Deployment providers
 .vercel/
@@ -34,6 +39,7 @@ Thumbs.db
 
 # Raw 3D authoring files are managed through an approved DAM or Git LFS.
 asset-pipeline/3d/source/**
+!asset-pipeline/3d/source/.gitkeep
 
 # Temporary 3D optimization output
 asset-pipeline/3d/tmp/
