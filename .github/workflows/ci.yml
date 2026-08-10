@@ -25,7 +25,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Detect Node project
         id: project
@@ -40,7 +40,7 @@ jobs:
 
       - name: Set up Node
         if: steps.project.outputs.has_package == 'true'
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
         with:
           node-version: 24
           cache: npm
@@ -76,7 +76,7 @@ jobs:
 
       - name: Upload build artifact
         if: steps.project.outputs.has_package == 'true' && hashFiles('dist/**') != ''
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v7
         with:
           name: ob-group-dist
           path: dist
